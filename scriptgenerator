@@ -1,0 +1,2216 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScriptForge — Content Script Generator</title>
+  <meta name="description" content="Generate high-converting content scripts for UGC, product reviews, ads, and storytelling in seconds.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Atmospheric background orbs -->
+  <div class="bg-effects" aria-hidden="true">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="logo" onclick="resetAll(); return false;">
+        <div class="logo-icon">
+          <i class="fa-solid fa-feather-pointed"></i>
+        </div>
+        <span class="logo-text">ScriptForge</span>
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <i class="fa-solid fa-moon" id="themeIcon"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container main-content">
+
+    <!-- Progress Steps Indicator -->
+    <nav class="progress-steps" aria-label="Form progress">
+      <div class="step" data-step="1">
+        <div class="step-circle"><span class="step-num">1</span><i class="fa-solid fa-check step-check"></i></div>
+        <span class="step-label">Script Type</span>
+      </div>
+      <div class="step-line" data-line="1"></div>
+      <div class="step" data-step="2">
+        <div class="step-circle"><span class="step-num">2</span><i class="fa-solid fa-check step-check"></i></div>
+        <span class="step-label">Your Details</span>
+      </div>
+      <div class="step-line" data-line="2"></div>
+      <div class="step" data-step="3">
+        <div class="step-circle"><span class="step-num">3</span><i class="fa-solid fa-check step-check"></i></div>
+        <span class="step-label">Your Script</span>
+      </div>
+    </nav>
+
+    <!-- ==================== STEP 1: Choose Script Type ==================== -->
+    <section class="step-panel active" id="step-1" aria-label="Step 1: Choose script type">
+      <div class="step-header">
+        <h1>Choose Your Script Type</h1>
+        <p class="step-subtitle">Select the format that best fits your content goal</p>
+      </div>
+      <div class="type-grid">
+
+        <button class="type-card" data-type="ugc" type="button">
+          <div class="type-icon"><i class="fa-solid fa-video"></i></div>
+          <h3>UGC Content</h3>
+          <p>Authentic, first-person style for social media</p>
+          <div class="type-check"><i class="fa-solid fa-check"></i></div>
+        </button>
+
+        <button class="type-card" data-type="review" type="button">
+          <div class="type-icon"><i class="fa-solid fa-star"></i></div>
+          <h3>Product Review</h3>
+          <p>Structured review that builds trust and authority</p>
+          <div class="type-check"><i class="fa-solid fa-check"></i></div>
+        </button>
+
+        <button class="type-card" data-type="hardsell" type="button">
+          <div class="type-icon"><i class="fa-solid fa-bolt"></i></div>
+          <h3>Hard Selling Ads</h3>
+          <p>Direct, urgency-driven advertising scripts</p>
+          <div class="type-check"><i class="fa-solid fa-check"></i></div>
+        </button>
+
+        <button class="type-card" data-type="storytelling" type="button">
+          <div class="type-icon"><i class="fa-solid fa-book-open"></i></div>
+          <h3>Soft Selling Storytelling</h3>
+          <p>Narrative-driven scripts for emotional connection</p>
+          <div class="type-check"><i class="fa-solid fa-check"></i></div>
+        </button>
+
+        <button class="type-card" data-type="hooks" type="button">
+          <div class="type-icon"><i class="fa-solid fa-magnet"></i></div>
+          <h3>Hook Generator</h3>
+          <p>Multiple attention-grabbing openers to test</p>
+          <div class="type-check"><i class="fa-solid fa-check"></i></div>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- ==================== STEP 2: Input Data ==================== -->
+    <section class="step-panel" id="step-2" aria-label="Step 2: Enter product details">
+      <div class="step-header">
+        <h1>Tell Us About Your Product</h1>
+        <p class="step-subtitle">The more specific you are, the better your script will be</p>
+      </div>
+
+      <button class="back-btn" type="button" onclick="goToStep(1)">
+        <i class="fa-solid fa-arrow-left"></i> Back
+      </button>
+
+      <div class="form-card">
+        <form id="scriptForm" novalidate>
+
+          <!-- Product Name -->
+          <div class="form-group">
+            <label for="productName">Product Name</label>
+            <input type="text" id="productName" maxlength="60" placeholder="e.g. GlowSkin Pro Serum" autocomplete="off">
+            <div class="field-footer">
+              <span class="error-msg" id="productNameError"></span>
+              <span class="char-count"><span id="productNameCount">0</span>/60</span>
+            </div>
+          </div>
+
+          <!-- Target Audience -->
+          <div class="form-group">
+            <label for="targetAudience">Target Audience</label>
+            <input type="text" id="targetAudience" maxlength="100" placeholder="e.g. Women 25-40 with sensitive skin" autocomplete="off">
+            <div class="field-footer">
+              <span class="error-msg" id="targetAudienceError"></span>
+              <span class="char-count"><span id="targetAudienceCount">0</span>/100</span>
+            </div>
+          </div>
+
+          <!-- Main Benefit -->
+          <div class="form-group">
+            <label for="mainBenefit">Main Benefit</label>
+            <textarea id="mainBenefit" maxlength="200" rows="2" placeholder="e.g. Reduces redness and hydrates skin in just 7 days"></textarea>
+            <div class="field-footer">
+              <span class="error-msg" id="mainBenefitError"></span>
+              <span class="char-count"><span id="mainBenefitCount">0</span>/200</span>
+            </div>
+          </div>
+
+          <!-- Problem / Pain Point -->
+          <div class="form-group">
+            <label for="problemPain">Problem / Pain Point</label>
+            <textarea id="problemPain" maxlength="200" rows="2" placeholder="e.g. Tired of trying expensive creams that cause breakouts"></textarea>
+            <div class="field-footer">
+              <span class="error-msg" id="problemPainError"></span>
+              <span class="char-count"><span id="problemPainCount">0</span>/200</span>
+            </div>
+          </div>
+
+          <!-- Tone Selector -->
+          <div class="form-group">
+            <label>Tone</label>
+            <div class="tone-group" id="toneGroup">
+              <button type="button" class="tone-btn" data-tone="casual">
+                <i class="fa-solid fa-face-smile"></i> Casual
+              </button>
+              <button type="button" class="tone-btn" data-tone="persuasive">
+                <i class="fa-solid fa-bullseye"></i> Persuasive
+              </button>
+              <button type="button" class="tone-btn" data-tone="emotional">
+                <i class="fa-solid fa-heart"></i> Emotional
+              </button>
+            </div>
+            <div class="field-footer">
+              <span class="error-msg" id="toneError"></span>
+            </div>
+          </div>
+
+          <!-- Generate Button -->
+          <button type="submit" class="btn btn-primary btn-generate" id="generateBtn">
+            <span class="btn-text">Generate Script</span>
+            <i class="fa-solid fa-wand-magic-sparkles btn-icon"></i>
+          </button>
+
+        </form>
+      </div>
+    </section>
+
+    <!-- ==================== STEP 3: Result ==================== -->
+    <section class="step-panel" id="step-3" aria-label="Step 3: Generated script">
+
+      <!-- Loading State -->
+      <div class="loading-state" id="loadingState">
+        <div class="loading-visual">
+          <div class="loading-ring">
+            <div class="loading-ring-inner"></div>
+          </div>
+        </div>
+        <p class="loading-text" id="loadingText">Analyzing your inputs...</p>
+        <div class="loading-bar-track">
+          <div class="loading-bar-fill" id="loadingBar"></div>
+        </div>
+        <p class="loading-sub">Crafting your perfect script</p>
+      </div>
+
+      <!-- Result State -->
+      <div class="result-state hidden" id="resultState">
+
+        <div class="result-header">
+          <button class="back-btn" type="button" onclick="goToStep(2)">
+            <i class="fa-solid fa-arrow-left"></i> Edit Details
+          </button>
+          <div class="result-meta" id="resultMeta"></div>
+        </div>
+
+        <div class="result-card" id="resultCard">
+          <!-- Script sections injected here -->
+        </div>
+
+        <div class="result-actions">
+          <button class="btn btn-primary btn-copy" id="copyBtn" type="button">
+            <i class="fa-regular fa-copy"></i>
+            <span>Copy to Clipboard</span>
+          </button>
+          <button class="btn btn-secondary btn-regenerate" id="regenerateBtn" type="button">
+            <i class="fa-solid fa-rotate"></i>
+            <span>Regenerate</span>
+          </button>
+        </div>
+
+        <button class="reset-link" type="button" onclick="resetAll()">
+          <i class="fa-solid fa-arrow-rotate-left"></i> Start Over
+        </button>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>Built for creators who ship content. ScriptForge &copy; 2025</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+/* ============================================
+   CSS Custom Properties — Design Tokens
+   ============================================ */
+:root {
+  --bg: #FAF9F7;
+  --bg-secondary: #F0EFEC;
+  --card: #FFFFFF;
+  --text: #1A1A2E;
+  --text-secondary: #55556A;
+  --muted: #9999AD;
+  --accent: #FF6B35;
+  --accent-hover: #E85A28;
+  --accent-light: rgba(255, 107, 53, 0.08);
+  --accent-lighter: rgba(255, 107, 53, 0.04);
+  --accent-gradient: linear-gradient(135deg, #FF6B35 0%, #F7A325 100%);
+  --border: #E6E5E0;
+  --error: #E5484D;
+  --error-bg: rgba(229, 72, 77, 0.06);
+  --success: #30A46C;
+  --shadow-sm: 0 1px 2px rgba(26, 26, 46, 0.04);
+  --shadow: 0 1px 3px rgba(26, 26, 46, 0.04), 0 6px 16px rgba(26, 26, 46, 0.06);
+  --shadow-lg: 0 4px 8px rgba(26, 26, 46, 0.04), 0 16px 40px rgba(26, 26, 46, 0.08);
+  --shadow-accent: 0 4px 20px rgba(255, 107, 53, 0.25);
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --orb-opacity: 0.12;
+}
+
+/* Dark theme tokens */
+[data-theme="dark"] {
+  --bg: #0C0C12;
+  --bg-secondary: #14141E;
+  --card: #1A1A28;
+  --text: #EEEEF2;
+  --text-secondary: #A0A0BC;
+  --muted: #6B6B85;
+  --accent: #FF7F52;
+  --accent-hover: #FF6B35;
+  --accent-light: rgba(255, 127, 82, 0.1);
+  --accent-lighter: rgba(255, 127, 82, 0.05);
+  --border: #28283A;
+  --error: #F87171;
+  --error-bg: rgba(248, 113, 113, 0.08);
+  --success: #4ADE80;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.15);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 6px 16px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.25), 0 16px 40px rgba(0, 0, 0, 0.35);
+  --shadow-accent: 0 4px 24px rgba(255, 107, 53, 0.2);
+  --orb-opacity: 0.08;
+}
+
+/* ============================================
+   Reset & Base
+   ============================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+  background-color: var(--bg);
+  transition: background-color var(--transition), color var(--transition);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   Background Atmosphere
+   ============================================ */
+.bg-effects {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: var(--orb-opacity);
+  will-change: transform;
+}
+
+.bg-orb-1 {
+  width: 500px;
+  height: 500px;
+  background: #FF6B35;
+  top: -10%;
+  right: -8%;
+  animation: orbFloat1 25s ease-in-out infinite;
+}
+
+.bg-orb-2 {
+  width: 400px;
+  height: 400px;
+  background: #F7A325;
+  bottom: -5%;
+  left: -10%;
+  animation: orbFloat2 30s ease-in-out infinite;
+}
+
+.bg-orb-3 {
+  width: 300px;
+  height: 300px;
+  background: #FF6B35;
+  top: 50%;
+  left: 40%;
+  animation: orbFloat3 20s ease-in-out infinite;
+}
+
+@keyframes orbFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-60px, 40px) scale(1.1); }
+  66% { transform: translate(30px, -30px) scale(0.95); }
+}
+
+@keyframes orbFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(50px, -50px) scale(1.08); }
+}
+
+@keyframes orbFloat3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(-40px, 30px) scale(1.05); }
+  75% { transform: translate(40px, -20px) scale(0.92); }
+}
+
+/* ============================================
+   Layout
+   ============================================ */
+.container {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.main-content {
+  position: relative;
+  z-index: 1;
+  padding-top: 24px;
+  padding-bottom: 60px;
+}
+
+/* ============================================
+   Header
+   ============================================ */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(250, 249, 247, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition), border-color var(--transition);
+}
+
+[data-theme="dark"] .site-header {
+  background: rgba(12, 12, 18, 0.8);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.logo-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  box-shadow: var(--shadow-accent);
+}
+
+.logo-text {
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.3px;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  color: var(--text-secondary);
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-light);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Progress Steps
+   ============================================ */
+.progress-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 40px;
+  padding: 8px 0;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.step-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  transition: all var(--transition);
+  position: relative;
+}
+
+.step-num {
+  transition: all var(--transition-fast);
+}
+
+.step-check {
+  position: absolute;
+  font-size: 13px;
+  color: #fff;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all var(--transition-fast);
+}
+
+.step.active .step-circle {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-light);
+}
+
+.step.completed .step-circle {
+  background: var(--accent-gradient);
+  border-color: transparent;
+  box-shadow: var(--shadow-accent);
+}
+
+.step.completed .step-num {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+.step.completed .step-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.step-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  transition: color var(--transition);
+  white-space: nowrap;
+}
+
+.step.active .step-label {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.step.completed .step-label {
+  color: var(--text-secondary);
+}
+
+.step-line {
+  width: 60px;
+  height: 2px;
+  background: var(--border);
+  margin: 0 8px;
+  margin-bottom: 22px;
+  border-radius: 1px;
+  transition: background var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.step-line.completed {
+  background: var(--accent-gradient);
+}
+
+/* ============================================
+   Step Panels — Transitions
+   ============================================ */
+.step-panel {
+  display: none;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.step-panel.active {
+  display: block;
+}
+
+.step-panel.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.step-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.step-header h1 {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.step-subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   Type Selection Grid (Step 1)
+   ============================================ */
+.type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+/* Make last 2 items span nicely */
+.type-grid .type-card:nth-child(4) {
+  grid-column: 1 / 2;
+}
+
+.type-grid .type-card:nth-child(5) {
+  grid-column: 2 / 4;
+}
+
+.type-card {
+  position: relative;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 18px;
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--transition);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: var(--font);
+  color: var(--text);
+  overflow: hidden;
+}
+
+.type-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent-gradient);
+  opacity: 0;
+  transition: opacity var(--transition);
+  border-radius: inherit;
+}
+
+.type-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.type-card:hover::before {
+  opacity: 0.02;
+}
+
+.type-card.selected {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-accent);
+}
+
+.type-card.selected::before {
+  opacity: 0.04;
+}
+
+.type-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius);
+  background: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--accent);
+  transition: all var(--transition);
+  position: relative;
+  z-index: 1;
+}
+
+.type-card.selected .type-icon {
+  background: var(--accent-gradient);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+.type-card h3 {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  position: relative;
+  z-index: 1;
+}
+
+.type-card p {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  position: relative;
+  z-index: 1;
+}
+
+.type-check {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  color: #fff;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all var(--transition);
+  z-index: 2;
+}
+
+.type-card.selected .type-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.type-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Back Button
+   ============================================ */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-family: var(--font);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 6px 0;
+  margin-bottom: 20px;
+  transition: color var(--transition-fast);
+}
+
+.back-btn:hover {
+  color: var(--accent);
+}
+
+/* ============================================
+   Form Card (Step 2)
+   ============================================ */
+.form-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  box-shadow: var(--shadow);
+  transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group:last-of-type {
+  margin-bottom: 28px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+  letter-spacing: -0.1px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.5;
+  transition: all var(--transition-fast);
+  outline: none;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--muted);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+  background: var(--card);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 56px;
+}
+
+/* Error state */
+.form-group.has-error input,
+.form-group.has-error textarea {
+  border-color: var(--error);
+  box-shadow: 0 0 0 3px var(--error-bg);
+}
+
+.field-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  min-height: 20px;
+}
+
+.error-msg {
+  font-size: 12px;
+  color: var(--error);
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.form-group.has-error .error-msg {
+  opacity: 1;
+}
+
+.char-count {
+  font-size: 11.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-left: auto;
+}
+
+.char-count.near-limit {
+  color: var(--accent);
+}
+
+.char-count.at-limit {
+  color: var(--error);
+}
+
+/* Tone Selector */
+.tone-group {
+  display: flex;
+  gap: 10px;
+}
+
+.tone-btn {
+  flex: 1;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text-secondary);
+  font-family: var(--font);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.tone-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.tone-btn.selected {
+  background: var(--accent-gradient);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: var(--shadow-accent);
+}
+
+.tone-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.tone-group.has-error .tone-btn:not(.selected) {
+  border-color: var(--error);
+}
+
+/* Generate Button */
+.btn-generate {
+  width: 100%;
+  padding: 15px 24px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+/* ============================================
+   Buttons — Shared
+   ============================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.15);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.btn:hover::after {
+  opacity: 1;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: var(--accent-gradient);
+  color: #fff;
+  box-shadow: var(--shadow-accent);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 6px 28px rgba(255, 107, 53, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1.5px solid var(--border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-light);
+}
+
+.btn-secondary:active {
+  transform: scale(0.98);
+}
+
+.btn-icon {
+  font-size: 14px;
+}
+
+/* ============================================
+   Loading State (Step 3)
+   ============================================ */
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.loading-visual {
+  margin-bottom: 28px;
+}
+
+.loading-ring {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 3px solid var(--border);
+  margin: 0 auto;
+  position: relative;
+  animation: ringPulse 1.5s ease-in-out infinite;
+}
+
+.loading-ring-inner {
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: var(--accent);
+  border-right-color: var(--accent);
+  animation: ringSpin 1s linear infinite;
+}
+
+@keyframes ringPulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-light); }
+  50% { box-shadow: 0 0 0 12px transparent; }
+}
+
+@keyframes ringSpin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 16px;
+  min-height: 24px;
+}
+
+.loading-bar-track {
+  width: 220px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 0 auto 12px;
+  overflow: hidden;
+}
+
+.loading-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent-gradient);
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+.loading-sub {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ============================================
+   Result State (Step 3)
+   ============================================ */
+.result-state.hidden {
+  display: none;
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.result-meta {
+  font-size: 12.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.result-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.result-card-header {
+  padding: 20px 24px;
+  background: var(--accent-gradient);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.result-card-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.result-card-header .type-badge {
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.script-section {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: sectionFadeIn 0.4s ease forwards;
+}
+
+.script-section:last-child {
+  border-bottom: none;
+}
+
+@keyframes sectionFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.script-section-label {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.script-section-text {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+/* Hook list style (for Hook Generator) */
+.hook-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.hook-list li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.hook-number {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+.hook-text {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+/* Result Actions */
+.result-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.result-actions .btn {
+  flex: 1;
+  padding: 14px 20px;
+  font-size: 14px;
+}
+
+.btn-copy.copied {
+  background: var(--success);
+  box-shadow: 0 4px 20px rgba(48, 164, 108, 0.3);
+}
+
+.reset-link {
+  display: block;
+  margin: 24px auto 0;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color var(--transition-fast);
+}
+
+.reset-link:hover {
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   Footer
+   ============================================ */
+.site-footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 24px 20px;
+  font-size: 12.5px;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+
+/* ============================================
+   Toast Notification
+   ============================================ */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--text);
+  color: var(--bg);
+  padding: 12px 20px;
+  border-radius: var(--radius);
+  font-size: 13.5px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s ease;
+  z-index: 200;
+  white-space: nowrap;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+@media (max-width: 640px) {
+  .step-header h1 {
+    font-size: 22px;
+  }
+
+  .step-subtitle {
+    font-size: 13.5px;
+  }
+
+  .type-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .type-grid .type-card:nth-child(4) {
+    grid-column: auto;
+  }
+
+  .type-grid .type-card:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+
+  .type-card {
+    padding: 18px 14px;
+  }
+
+  .form-card {
+    padding: 22px 18px;
+    border-radius: var(--radius-lg);
+  }
+
+  .tone-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .step-label {
+    font-size: 11px;
+  }
+
+  .step-line {
+    width: 36px;
+  }
+
+  .result-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .result-actions {
+    flex-direction: column;
+  }
+
+  .result-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .bg-orb-1 {
+    width: 300px;
+    height: 300px;
+  }
+
+  .bg-orb-2 {
+    width: 250px;
+    height: 250px;
+  }
+
+  .bg-orb-3 {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+@media (max-width: 380px) {
+  .type-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .type-grid .type-card:nth-child(5) {
+    grid-column: auto;
+  }
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .bg-orb {
+    display: none;
+  }
+}
+
+/* ============================================
+   ScriptForge — Content Script Generator
+   Production-ready vanilla JS
+   ============================================ */
+
+(function () {
+  'use strict';
+
+  // ==========================================
+  // State
+  // ==========================================
+  const state = {
+    currentStep: 1,
+    selectedType: null,
+    selectedTone: null,
+    generatedScript: null,
+    formData: {}
+  };
+
+  // ==========================================
+  // DOM References
+  // ==========================================
+  const $ = (sel) => document.querySelector(sel);
+  const $$ = (sel) => document.querySelectorAll(sel);
+
+  const themeToggle = $('#themeToggle');
+  const themeIcon = $('#themeIcon');
+  const stepPanels = $$('.step-panel');
+  const stepIndicators = $$('.step');
+  const stepLines = $$('.step-line');
+  const typeCards = $$('.type-card');
+  const toneBtns = $$('.tone-btn');
+  const toneGroup = $('#toneGroup');
+  const scriptForm = $('#scriptForm');
+  const loadingState = $('#loadingState');
+  const resultState = $('#resultState');
+  const loadingText = $('#loadingText');
+  const loadingBar = $('#loadingBar');
+  const resultCard = $('#resultCard');
+  const resultMeta = $('#resultMeta');
+  const copyBtn = $('#copyBtn');
+  const regenerateBtn = $('#regenerateBtn');
+  const toast = (() => {
+    const el = document.createElement('div');
+    el.className = 'toast';
+    document.body.appendChild(el);
+    return el;
+  })();
+
+  // Form fields
+  const fields = {
+    productName: { input: $('#productName'), count: $('#productNameCount'), error: $('#productNameError'), max: 60 },
+    targetAudience: { input: $('#targetAudience'), count: $('#targetAudienceCount'), error: $('#targetAudienceError'), max: 100 },
+    mainBenefit: { input: $('#mainBenefit'), count: $('#mainBenefitCount'), error: $('#mainBenefitError'), max: 200 },
+    problemPain: { input: $('#problemPain'), count: $('#problemPainCount'), error: $('#problemPainError'), max: 200 }
+  };
+
+  // ==========================================
+  // Template Library
+  // Each script type has tone-specific variants
+  // for each section: hook, problem, solution, benefit, cta
+  // Placeholders: {product}, {audience}, {benefit}, {problem}
+  // ==========================================
+
+  const templates = {
+
+    // ----- UGC Content -----
+    ugc: {
+      casual: {
+        hook: [
+          "Okay, I need to talk about {product} because honestly? It's a total game changer.",
+          "POV: You just found {product} and your {problem} days are officially over.",
+          "If you're a {audience} who's tired of {problem}, this is your sign to keep watching."
+        ],
+        problem: [
+          "I've been dealing with {problem} for way too long, and I tried literally everything. Nothing worked.",
+          "Can we talk about how frustrating {problem} is? Like, why is nobody addressing this properly?",
+          "Being a {audience} means constantly dealing with {problem}, and I was so done with it."
+        ],
+        solution: [
+          "Then {product} showed up on my feed and I was skeptical, but I gave it a shot anyway.",
+          "So I stumbled onto {product} and honestly didn't expect much at first. But then...",
+          "Enter {product}. A friend recommended it and I figured, what do I have to lose?"
+        ],
+        benefit: [
+          "Now? {benefit}. I'm not even exaggerating — it actually delivers on the promise.",
+          "The result? {benefit}. I seriously wish I found this sooner.",
+          "And the best part — {benefit}. Like, that's it. That's the whole post."
+        ],
+        cta: [
+          "Do yourself a favor and check it out. The link's right there, go get it.",
+          "If this resonates at all, go grab yours. You won't regret it, trust me.",
+          "Seriously, just try it. You can come back and thank me later."
+        ]
+      },
+      persuasive: {
+        hook: [
+          "I tested {product} for 30 days so you don't have to waste your money on the wrong thing.",
+          "There's a reason every {audience} is switching to {product}. Let me show you why.",
+          "I ignored {product} for weeks. Biggest mistake I made this month. Here's why."
+        ],
+        problem: [
+          "Here's what nobody tells you about {problem}: most solutions out there are band-aids, not fixes.",
+          "If you're a {audience}, you already know {problem} isn't just annoying — it's holding you back.",
+          "The market is full of products that claim to solve {problem}. Almost none of them actually do."
+        ],
+        solution: [
+          "{product} is different. It's built specifically for {audience} who are serious about solving {problem}.",
+          "I finally found something that targets {problem} at the root, not just the symptoms. It's called {product}.",
+          "After testing dozens of options, {product} was the only one that made a real, noticeable difference."
+        ],
+        benefit: [
+          "Here's exactly what happened: {benefit}. No fluff, no exaggeration — just results.",
+          "Within the first week, I noticed {benefit}. By week two, there was no going back.",
+          "The data doesn't lie: {benefit}. And I experienced it firsthand."
+        ],
+        cta: [
+          "Stop wasting time and money on things that don't work. Click the link and see for yourself.",
+          "The proof is right here. Go try {product} — your future self will thank you.",
+          "Don't take my word for it. Try it once, and you'll understand why I'm posting this."
+        ]
+      },
+      emotional: {
+        hook: [
+          "I almost gave up trying to fix {problem}. Then something changed everything.",
+          "This isn't just another product review. This is about finally feeling like myself again.",
+          "I didn't think anything could help with {problem}. {product} proved me wrong."
+        ],
+        problem: [
+          "There's this quiet frustration that builds when you're a {audience} dealing with {problem}. Nobody really gets it unless they've been there.",
+          "It's exhausting, waking up and dealing with {problem} again and again, pretending it doesn't affect you.",
+          "I used to avoid mirrors, avoid photos, avoid situations — all because of {problem}."
+        ],
+        solution: [
+          "Finding {product} felt like finding someone who actually understood what I was going through.",
+          "When I first tried {product}, I remember thinking 'please don't let me down again.' It didn't.",
+          "I came across {product} on one of those late-night scrolling sessions. Something about it just felt different."
+        ],
+        benefit: [
+          "For the first time in so long, {benefit}. I didn't realize how much I'd missed feeling this way.",
+          "{benefit} — and I'm not just saying that. I actually cried when I saw the difference.",
+          "It's hard to put into words, but {benefit}. It sounds small until you've lived without it."
+        ],
+        cta: [
+          "If you've felt the way I felt, please give this a try. You deserve to feel this difference too.",
+          "You don't have to keep struggling in silence. The link is there — take the step.",
+          "I'm sharing this because I wish someone had told me about {product} sooner. Go get it."
+        ]
+      }
+    },
+
+    // ----- Product Review -----
+    review: {
+      casual: {
+        hook: [
+          "So I've been testing {product} and I have some thoughts. Buckle up.",
+          "Honest review time: {product}. No sponsorship, no BS — just my real experience.",
+          "I bought {product} with my own money and here's what actually happened."
+        ],
+        problem: [
+          "Before this, I was dealing with {problem}. Classic {audience} struggle, honestly.",
+          "If you know, you know — {problem} is the worst. And most products barely make a dent.",
+          "I'd tried a bunch of stuff for {problem} and was about to just accept it as part of life."
+        ],
+        solution: [
+          "Saw {product} getting buzz and decided to put it to the test for a proper review.",
+          "A creator I trust mentioned {product}, so I picked it up to see if the hype was real.",
+          "Full transparency: I was sent {product} to try, but my opinions are 100% my own."
+        ],
+        benefit: [
+          "After using it consistently, {benefit}. It's not magic, but it's really, really good.",
+          "The biggest thing I noticed: {benefit}. That alone makes it worth it in my book.",
+          "Here's where it won me over — {benefit}. Legit impressed."
+        ],
+        cta: [
+          "If you're on the fence, I'd say go for it. Link's below if you want to check it out.",
+          "Would I recommend it? Yeah, actually. Grab it through the link and see what you think.",
+          "Bottom line: it works. Check it out for yourself — link's in the description."
+        ]
+      },
+      persuasive: {
+        hook: [
+          "I've reviewed over 20 products in this category. {product} is the first one I'm genuinely recommending.",
+          "Most product reviews are fluff. Let me give you the actual breakdown of {product}.",
+          "Stop scrolling if {problem} has been on your radar. This review is for you."
+        ],
+        problem: [
+          "As a {audience}, finding something that actually solves {problem} is surprisingly rare. Most products overpromise and underdeliver.",
+          "The gap in the market is clear: {audience} need a real solution for {problem}, not another gimmick.",
+          "I've tested the top contenders, and most fall short when it comes to {problem}."
+        ],
+        solution: [
+          "{product} takes a different approach. Instead of masking the problem, it's designed to address it directly — and the formulation shows.",
+          "What sets {product} apart is the specific focus on {audience} needs. This isn't a generic solution repackaged.",
+          "From the ingredient list to the application method, {product} was clearly built by people who understand {problem}."
+        ],
+        benefit: [
+          "After thorough testing, here's my verdict: {benefit}. The results are consistent and measurable.",
+          "The stand-out result? {benefit}. In a market full of disappointment, this delivers.",
+          "{benefit} — and I have the before-and-after to prove it. This isn't anecdotal."
+        ],
+        cta: [
+          "If you're serious about solving {problem}, this is the smartest investment you can make right now. Link below.",
+          "Skip the trial-and-error phase. Go straight to what works — link's in the description.",
+          "Don't waste another dollar on products that don't deliver. {product} is the real deal."
+        ]
+      },
+      emotional: {
+        hook: [
+          "I wasn't planning on making this video. But after what {product} did for me, I had to.",
+          "This review is personal. Because {problem} affected more than just the surface for me.",
+          "I've never felt this strongly about a product before. Here's why {product} changed my mind."
+        ],
+        problem: [
+          "Living with {problem} as a {audience} chips away at your confidence in ways people don't talk about.",
+          "It's not just about {problem}. It's about how it makes you feel every single day — tired, frustrated, invisible.",
+          "I spent months — maybe years — quietly struggling with {problem} while everyone else seemed fine."
+        ],
+        solution: [
+          "When I started using {product}, I told myself not to get my hopes up. I'd been let down too many times before.",
+          "Something about {product} felt different from the start. Maybe it was the approach, maybe it was the intention behind it.",
+          "I didn't want to believe it at first. But week after week, {product} kept proving itself."
+        ],
+        benefit: [
+          "{benefit}. I keep reading those words and they still don't feel real. But they are.",
+          "For someone who thought {problem} was just something I'd have to live with, {benefit} feels like a second chance.",
+          "The emotional weight of {benefit} is something you can't put a price on. I finally feel like me again."
+        ],
+        cta: [
+          "If you're tired of feeling the way I felt, please give this a chance. You're worth it.",
+          "I know how it feels to be hopeless about {problem}. {product} can change that. Please try it.",
+          "This is more than a product recommendation. It's a 'you deserve better' recommendation. Link below."
+        ]
+      }
+    },
+
+    // ----- Hard Selling Ads -----
+    hardsell: {
+      casual: {
+        hook: [
+          "Stop what you're doing. If {problem} is ruining your day, this is the fix.",
+          "I'm not messing around — {product} is the real deal and you need to see this right now.",
+          "Listen, I don't hype things up for no reason. But {product}? Totally different story."
+        ],
+        problem: [
+          "You're tired of {problem}. I get it. You've tried the rest and you're still stuck.",
+          "Every {audience} knows the pain of {problem}. It's time to stop putting up with it.",
+          "Why are you still dealing with {problem} when there's actually something that works?"
+        ],
+        solution: [
+          "{product} isn't another gimmick. It's a straight-up solution built for people like you.",
+          "This is {product}. It does one thing and it does it better than anything else out there.",
+          "Forget everything else you've tried. {product} is what actually works."
+        ],
+        benefit: [
+          "One use and you'll see: {benefit}. No joke, no exaggeration.",
+          "{benefit} — that's what happens when a product is built to actually solve the problem.",
+          "People are losing it over this because {benefit}. And honestly? They should be."
+        ],
+        cta: [
+          "Click the link. Get {product}. Fix the problem. It's that simple.",
+          "Don't wait — grab it now while it's still available. Link is right there.",
+          "Stop overthinking it. Click the link, try it, and thank me later."
+        ]
+      },
+      persuasive: {
+        hook: [
+          "Every second you spend dealing with {problem} is time wasted. Here's how to fix it permanently.",
+          "{audience} are finally waking up to {product}. If you haven't yet, you're already behind.",
+          "This is not a drill. {product} is solving {problem} for thousands of {audience} right now."
+        ],
+        problem: [
+          "The cost of {problem} adds up fast: wasted money, wasted time, and wasted opportunities.",
+          "You've already spent enough trying to fix {problem}. The question is: are you going to keep repeating the cycle?",
+          "Smart {audience} know that {problem} isn't going to solve itself. Action is required."
+        ],
+        solution: [
+          "{product} was engineered for one purpose: to eliminate {problem} efficiently and permanently.",
+          "This isn't guesswork. {product} uses a proven approach that consistently delivers results for {audience}.",
+          "The data is clear: {audience} who use {product} see results. Period."
+        ],
+        benefit: [
+          "The outcome speaks for itself: {benefit}. Measurable, repeatable, undeniable.",
+          "{benefit} — that's not a marketing claim. That's what the numbers and the users confirm.",
+          "When {benefit} becomes your new normal, you'll wonder why you waited this long."
+        ],
+        cta: [
+          "The link is below. Every minute you wait is another minute {problem} continues. Act now.",
+          "This is a no-brainer decision. Click through, get {product}, and start seeing results immediately.",
+          "Limited availability. Don't let this be another 'I wish I'd acted sooner' moment. Go now."
+        ]
+      },
+      emotional: {
+        hook: [
+          "Imagine waking up and not having to think about {problem} ever again. That's what {product} offers.",
+          "You deserve better than what {problem} is putting you through. {product} is how you get it.",
+          "What if I told you the frustration of {problem} could end — not someday, but starting today?"
+        ],
+        problem: [
+          "The emotional toll of {problem} is something most {audience} don't talk about. But you feel it every day.",
+          "It's the quiet weight of {problem} that drains your energy and steals your confidence.",
+          "You didn't ask for {problem}. But you can choose to stop letting it control your life."
+        ],
+        solution: [
+          "{product} was created by people who understand what {problem} really costs you — not just physically, but emotionally.",
+          "This isn't just a product. It's a way to take back what {problem} has been taking from you.",
+          "{product} represents a turning point. The moment you decide you've had enough."
+        ],
+        benefit: [
+          "Picture this: {benefit}. How would that change everything for you?",
+          "The relief of {benefit} goes beyond the surface. It changes how you feel about yourself.",
+          "{benefit} isn't just a result — it's the feeling of being free from something that's held you back."
+        ],
+        cta: [
+          "You've carried {problem} long enough. Let {product} carry you to a better place. Click the link.",
+          "Make the decision your future self will thank you for. Get {product} right now.",
+          "This is your moment. Don't let {problem} steal another day. The link is right there — go."
+        ]
+      }
+    },
+
+    // ----- Soft Selling Storytelling -----
+    storytelling: {
+      casual: {
+        hook: [
+          "So this random Tuesday, I discovered something that changed my entire routine.",
+          "Last month, I made one small change that I didn't think would matter. It did. A lot.",
+          "I wasn't looking for a solution that day. But it found me anyway."
+        ],
+        problem: [
+          "It started like it always does — another morning dealing with {problem}, thinking 'this is just how it is.'",
+          "I'd been going through the motions, handling {problem} the same way I always had. Inefficiently.",
+          "My friend joked about how {problem} always seemed to get the best of me. I laughed, but it stung a little."
+        ],
+        solution: [
+          "Then someone casually mentioned {product}. Didn't think much of it, but I looked it up later that night.",
+          "I saw {product} in a completely unrelated conversation and something just clicked. I had to try it.",
+          "A late-night scroll led me to {product}. I almost scrolled past. Glad I didn't."
+        ],
+        benefit: [
+          "Fast forward a few weeks and {benefit}. Just like that. No dramatic transformation montage — just quiet, steady improvement.",
+          "The change was so gradual I almost didn't notice. Then one day I realized: {benefit}. And it stuck.",
+          "Now it's just part of my life. {benefit}. Simple as that."
+        ],
+        cta: [
+          "If you're curious, I'll leave the link below. No pressure — just wanted to share my experience.",
+          "Not telling you to buy anything. Just sharing what worked for me. Link's there if you want it.",
+          "Sometimes the best finds are the unexpected ones. If it resonates, check it out."
+        ]
+      },
+      persuasive: {
+        hook: [
+          "There's a pattern I keep seeing among successful {audience}: they all made one specific switch.",
+          "I spent six months studying what separates {audience} who struggle with {problem} from those who don't. The answer surprised me.",
+          "The most underrated decision a {audience} can make? It's not what you think."
+        ],
+        problem: [
+          "Most {audience} approach {problem} the same way: try something, get mediocre results, accept it. But there's a better path.",
+          "The conventional wisdom around {problem} is outdated. And the people still following it are paying the price.",
+          "I noticed a common thread among {audience} who overcome {problem}: they all stopped doing what everyone else was doing."
+        ],
+        solution: [
+          "That's where {product} comes in. It's not the loudest solution — it's the smartest one.",
+          "The {audience} I saw getting the best results all had one thing in common: they'd discovered {product}.",
+          "{product} takes a completely different approach to {problem}. And the results speak for themselves."
+        ],
+        benefit: [
+          "The compound effect is what's remarkable. Over time, {benefit} — and it accelerates.",
+          "What starts as a small shift turns into {benefit}. That's the power of the right tool.",
+          "The data points to one conclusion: {benefit}. And the user stories confirm it."
+        ],
+        cta: [
+          "If you're ready to stop doing what doesn't work, the link is below. Sometimes the best next step is the simplest one.",
+          "I'm not asking you to believe me. I'm asking you to look at the results and decide for yourself. Link below.",
+          "The smartest {audience} are already there. Join them — link's in the description."
+        ]
+      },
+      emotional: {
+        hook: [
+          "Some stories don't start with a problem. They start with a feeling you can't quite name.",
+          "I remember the exact moment I decided I'd had enough. It wasn't dramatic. It was quiet.",
+          "This isn't a success story about a product. It's a story about finally choosing myself."
+        ],
+        problem: [
+          "It's hard to explain {problem} to someone who hasn't felt it. It's not the thing itself — it's what the thing takes from you.",
+          "There were nights I'd lie awake thinking about {problem}, not because it was painful, but because it was exhausting.",
+          "The hardest part about {problem} isn't the struggle. It's the slow, quiet way it makes you feel like less of yourself."
+        ],
+        solution: [
+          "{product} didn't arrive as a hero. It arrived as a quiet suggestion from someone who'd been where I was.",
+          "I didn't find {product} at my lowest point. I found it on a random Tuesday when I was just... tired enough to try.",
+          "There was no lightning bolt moment. Just a slow unfolding, starting with a decision to try {product}."
+        ],
+        benefit: [
+          "{benefit}. Three words that carry months of quiet healing and patience. And they're mine now.",
+          "The first time I noticed {benefit}, I didn't celebrate. I just sat there, relieved. Relieved that it was real.",
+          "It's the kind of shift you can't photograph: {benefit}. But you feel it in everything."
+        ],
+        cta: [
+          "If any part of this story felt familiar, maybe it's time. No urgency, no pressure. Just a door that's open for you. Link below.",
+          "I'm not selling you anything. I'm handing you a rope, in case you're ready to climb out too. Link's there if you need it.",
+          "Sometimes the bravest thing you can do is try one more time. If that time is now, the link is below."
+        ]
+      }
+    },
+
+    // ----- Hook Generator (generates multiple hooks) -----
+    hooks: {
+      casual: {
+        question: [
+          "What if I told you {product} could fix {problem} without the usual hassle?",
+          "Why are {audience} still struggling with {problem} when this exists?",
+          "Ever wonder why some {audience} never seem to deal with {problem}? Yeah, me too."
+        ],
+        bold: [
+          "{product} is the only thing that actually solved my {problem}. And I've tried everything.",
+          "I'm calling it: {product} is the best thing to happen to {audience} this year.",
+          "Stop scrolling. If you have {problem}, {product} is the answer. Period."
+        ],
+        relatable: [
+          "When you've tried everything for {problem} and you're just... tired. Same. But then I found {product}.",
+          "That feeling when {problem} strikes again and you're just over it — {product} gets it.",
+          "If your group chat has ever had a full conversation about {problem}, this one's for you."
+        ],
+        contrarian: [
+          "Unpopular opinion: most solutions for {problem} are a waste of money. {product} is the exception.",
+          "Everyone's talking about the wrong fix for {problem}. Here's what actually works: {product}.",
+          "I thought {product} was overrated. Then I actually used it. Plot twist: it's underrated."
+        ],
+        curiosity: [
+          "I'm not allowed to show the before photo, but let me tell you what {product} did for my {problem}.",
+          "The one thing about {product} nobody mentions? {benefit}. And that changes everything.",
+          "Three weeks ago, I didn't believe in {product}. Today, I can't shut up about it. Here's why."
+        ]
+      },
+      persuasive: {
+        question: [
+          "What separates {audience} who solve {problem} from those who don't? One product: {product}.",
+          "Are you still throwing money at {problem}? There's a smarter way, and it's called {product}.",
+          "How much time have you already lost to {problem}? What if the solution took 30 seconds?"
+        ],
+        bold: [
+          "{product} outperforms every competitor I've tested on {problem}. The margins aren't even close.",
+          "If {problem} costs you more than the price of {product}, you can't afford not to try it.",
+          "I've reviewed hundreds of products. {product} ranks in the top 3 I've ever recommended."
+        ],
+        relatable: [
+          "Every {audience} knows the cycle: try something, hope it works, get disappointed. {product} breaks that cycle.",
+          "The frustration of {problem} is universal among {audience}. The solution, however, is not — until now.",
+          "If your current approach to {problem} involves 'hoping for the best,' we need to talk about {product}."
+        ],
+        contrarian: [
+          "The industry doesn't want you to know about {product} because it makes their other solutions look bad.",
+          "Forget what you've been told about solving {problem}. The conventional approach is fundamentally flawed.",
+          "Most advice about {problem} is recycled garbage. {product} is based on what actually works."
+        ],
+        curiosity: [
+          "I tested {product} with a control group. The results for {problem} were not what I expected — they were better.",
+          "There's a specific reason {product} works when nothing else does. And once you see it, you can't unsee it.",
+          "The data behind {product} and {problem} is fascinating. Let me break it down in 60 seconds."
+        ]
+      },
+      emotional: {
+        question: [
+          "What would your life look like if {problem} simply wasn't part of it anymore?",
+          "Do you remember who you were before {problem} took over? {product} might help you find that person again.",
+          "When was the last time you felt truly free from {problem}? What if that feeling could be permanent?"
+        ],
+        bold: [
+          "{product} didn't just solve my {problem}. It gave me back the part of myself I thought was gone.",
+          "I don't care if this sounds dramatic: {product} changed my relationship with {problem} forever.",
+          "This is the most important thing I've ever shared: {product} gave me my confidence back."
+        ],
+        relatable: [
+          "That quiet moment when {problem} makes you feel invisible — I know it well. {product} made it stop.",
+          "If you've ever cancelled plans because of {problem}, you understand. {product} is for us.",
+          "The sigh of relief when {problem} finally stops being the main character in your life — that's what {product} delivers."
+        ],
+        contrarian: [
+          "They say you should just accept {problem}. I say that's the worst advice you'll ever hear. {product} agrees.",
+          "Being told to 'just deal with' {problem} is dismissive. Choosing {product} is self-respect.",
+          "Normalization of {problem} is the real problem. {product} proves you don't have to settle."
+        ],
+        curiosity: [
+          "I didn't expect to cry when {product} finally worked for my {problem}. But I did. Here's the full story.",
+          "What happens when {problem} stops being your identity? {product} showed me, and it was beautiful.",
+          "The moment {problem} faded felt like waking up. {product} was the alarm clock."
+        ]
+      }
+    }
+  };
+
+  // ==========================================
+  // Script Generation Engine
+  // ==========================================
+
+  /**
+   * Pick a random element from an array
+   */
+  function pick(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  /**
+   * Replace placeholders in template string
+   */
+  function fillTemplate(str, data) {
+    return str
+      .replace(/\{product\}/g, data.productName)
+      .replace(/\{audience\}/g, data.targetAudience)
+      .replace(/\{benefit\}/g, data.mainBenefit)
+      .replace(/\{problem\}/g, data.problemPain);
+  }
+
+  /**
+   * Generate a full script based on type, tone, and input data
+   */
+  function generateScript(type, tone, data) {
+    // For Hook Generator, produce 5 hooks using different formulas
+    if (type === 'hooks') {
+      const hookTemplates = templates.hooks[tone];
+      const formulas = ['question', 'bold', 'relatable', 'contrarian', 'curiosity'];
+      const hooks = formulas.map((formula, i) => ({
+        number: i + 1,
+        formula: formula.charAt(0).toUpperCase() + formula.slice(1),
+        text: fillTemplate(pick(hookTemplates[formula]), data)
+      }));
+      return { type: 'hooks', hooks };
+    }
+
+    // For standard script types, generate 5-section script
+    const typeTemplates = templates[type][tone];
+    return {
+      type: 'standard',
+      sections: [
+        { label: 'Hook', text: fillTemplate(pick(typeTemplates.hook), data) },
+        { label: 'Problem', text: fillTemplate(pick(typeTemplates.problem), data) },
+        { label: 'Solution', text: fillTemplate(pick(typeTemplates.solution), data) },
+        { label: 'Benefit', text: fillTemplate(pick(typeTemplates.benefit), data) },
+        { label: 'Call To Action', text: fillTemplate(pick(typeTemplates.cta), data) }
+      ]
+    };
+  }
+
+  // ==========================================
+  // Type Name Map
+  // ==========================================
+  const typeNames = {
+    ugc: 'UGC Content',
+    review: 'Product Review',
+    hardsell: 'Hard Selling Ad',
+    storytelling: 'Soft Selling Story',
+    hooks: 'Hook Generator'
+  };
+
+  // ==========================================
+  // Step Navigation
+  // ==========================================
+
+  function goToStep(stepNum) {
+    // Update state
+    state.currentStep = stepNum;
+
+    // Update progress indicators
+    stepIndicators.forEach((el) => {
+      const s = parseInt(el.dataset.step);
+      el.classList.remove('active', 'completed');
+      if (s === stepNum) el.classList.add('active');
+      if (s < stepNum) el.classList.add('completed');
+    });
+
+    stepLines.forEach((el) => {
+      const l = parseInt(el.dataset.line);
+      el.classList.toggle('completed', l < stepNum);
+    });
+
+    // Transition panels
+    stepPanels.forEach((panel) => {
+      panel.classList.remove('visible');
+      // After fade-out, hide inactive panels
+      setTimeout(() => {
+        panel.classList.remove('active');
+      }, 200);
+    });
+
+    // Show target panel after a brief delay
+    setTimeout(() => {
+      const target = $(`#step-${stepNum}`);
+      target.classList.add('active');
+      // Trigger reflow for animation
+      void target.offsetHeight;
+      target.classList.add('visible');
+      // Scroll to top of main content
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 250);
+  }
+
+  // ==========================================
+  // Form Validation
+  // ==========================================
+
+  function validateForm() {
+    let valid = true;
+
+    // Validate text fields
+    Object.keys(fields).forEach((key) => {
+      const field = fields[key];
+      const val = field.input.value.trim();
+      const group = field.input.closest('.form-group');
+
+      if (!val) {
+        group.classList.add('has-error');
+        field.error.textContent = 'This field is required';
+        valid = false;
+      } else {
+        group.classList.remove('has-error');
+        field.error.textContent = '';
+      }
+    });
+
+    // Validate tone
+    if (!state.selectedTone) {
+      toneGroup.classList.add('has-error');
+      $('#toneError').textContent = 'Please select a tone';
+      valid = false;
+    } else {
+      toneGroup.classList.remove('has-error');
+      $('#toneError').textContent = '';
+    }
+
+    return valid;
+  }
+
+  // ==========================================
+  // Character Counters
+  // ==========================================
+
+  function updateCharCount(field) {
+    const len = field.input.value.length;
+    const max = field.max;
+    field.count.textContent = len;
+
+    const counter = field.count.closest('.char-count');
+    counter.classList.remove('near-limit', 'at-limit');
+    if (len >= max) {
+      counter.classList.add('at-limit');
+    } else if (len >= max * 0.85) {
+      counter.classList.add('near-limit');
+    }
+  }
+
+  // ==========================================
+  // Loading Animation
+  // ==========================================
+
+  const loadingPhases = [
+    { text: 'Analyzing your inputs...', progress: 15 },
+    { text: 'Crafting the perfect hook...', progress: 40 },
+    { text: 'Structuring the narrative...', progress: 65 },
+    { text: 'Polishing your script...', progress: 85 },
+    { text: 'Finalizing output...', progress: 100 }
+  ];
+
+  function runLoadingAnimation() {
+    return new Promise((resolve) => {
+      loadingState.style.display = '';
+      resultState.classList.add('hidden');
+      loadingBar.style.width = '0%';
+      loadingText.textContent = loadingPhases[0].text;
+
+      let i = 0;
+      const interval = setInterval(() => {
+        i++;
+        if (i < loadingPhases.length) {
+          loadingText.textContent = loadingPhases[i].text;
+          loadingBar.style.width = loadingPhases[i].progress + '%';
+        }
+        if (i >= loadingPhases.length) {
+          clearInterval(interval);
+          setTimeout(resolve, 400);
+        }
+      }, 500);
+    });
+  }
+
+  // ==========================================
+  // Render Result
+  // ==========================================
+
+  function renderResult(script) {
+    // Build card header
+    let html = `
+      <div class="result-card-header">
+        <h2>Your Generated Script</h2>
+        <span class="type-badge">${typeNames[state.selectedType]}</span>
+      </div>
+    `;
+
+    if (script.type === 'hooks') {
+      // Render hook list
+      html += `<div class="script-section" style="animation-delay: 0.1s">
+        <span class="script-section-label">Generated Hooks</span>
+        <ul class="hook-list">
+          ${script.hooks.map((h, idx) => `
+            <li style="animation-delay: ${0.15 + idx * 0.08}s; opacity: 0; animation: sectionFadeIn 0.4s ease ${0.15 + idx * 0.08}s forwards;">
+              <span class="hook-number">${h.number}</span>
+              <div>
+                <span class="hook-text">${h.text}</span>
+                <span style="display:block; font-size:11px; color:var(--muted); margin-top:4px; font-weight:500; text-transform:uppercase; letter-spacing:0.5px;">${h.formula} Hook</span>
+              </div>
+            </li>
+          `).join('')}
+        </ul>
+      </div>`;
+    } else {
+      // Render standard sections
+      script.sections.forEach((section, idx) => {
+        html += `
+          <div class="script-section" style="animation-delay: ${0.1 + idx * 0.08}s">
+            <span class="script-section-label">${section.label}</span>
+            <p class="script-section-text">${section.text}</p>
+          </div>
+        `;
+      });
+    }
+
+    resultCard.innerHTML = html;
+
+    // Calculate word count and reading time
+    const allText = script.type === 'hooks'
+      ? script.hooks.map(h => h.text).join(' ')
+      : script.sections.map(s => s.text).join(' ');
+    const wordCount = allText.split(/\s+/).filter(Boolean).length;
+    const readTime = Math.max(1, Math.ceil(wordCount / 200));
+    resultMeta.textContent = `${wordCount} words · ~${readTime} min read`;
+
+    // Show result, hide loading
+    loadingState.style.display = 'none';
+    resultState.classList.remove('hidden');
+
+    // Reset copy button
+    copyBtn.classList.remove('copied');
+    copyBtn.querySelector('span').textContent = 'Copy to Clipboard';
+    copyBtn.querySelector('i').className = 'fa-regular fa-copy';
+  }
+
+  // ==========================================
+  // Copy to Clipboard
+  // ==========================================
+
+  function getPlainText() {
+    const script = state.generatedScript;
+    if (!script) return '';
+
+    if (script.type === 'hooks') {
+      return script.hooks.map(h => `[Hook ${h.number} — ${h.formula}]\n${h.text}`).join('\n\n');
+    }
+
+    return script.sections
+      .map(s => `[${s.label.toUpperCase()}]\n${s.text}`)
+      .join('\n\n');
+  }
+
+  async function copyToClipboard() {
+    const text = getPlainText();
+    try {
+      await navigator.clipboard.writeText(text);
+      // Visual feedback
+      copyBtn.classList.add('copied');
+      copyBtn.querySelector('span').textContent = 'Copied!';
+      copyBtn.querySelector('i').className = 'fa-solid fa-check';
+      setTimeout(() => {
+        copyBtn.classList.remove('copied');
+        copyBtn.querySelector('span').textContent = 'Copy to Clipboard';
+        copyBtn.querySelector('i').className = 'fa-regular fa-copy';
+      }, 2000);
+    } catch (err) {
+      showToast('Failed to copy. Please select and copy manually.');
+    }
+  }
+
+  // ==========================================
+  // Toast Notification
+  // ==========================================
+
+  let toastTimer = null;
+  function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  // ==========================================
+  // localStorage Persistence
+  // ==========================================
+
+  const STORAGE_KEY = 'scriptforge_state';
+
+  function saveToStorage() {
+    const data = {
+      selectedType: state.selectedType,
+      selectedTone: state.selectedTone,
+      formData: {
+        productName: fields.productName.input.value,
+        targetAudience: fields.targetAudience.input.value,
+        mainBenefit: fields.mainBenefit.input.value,
+        problemPain: fields.problemPain.input.value
+      },
+      generatedScript: state.generatedScript
+    };
+    try {
