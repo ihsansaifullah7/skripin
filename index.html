@@ -375,7 +375,169 @@
   }
   footer strong { color: var(--blue-brand); }
 
-  /* scrollbar */
+  /* ── GENERATE MAIN BUTTON (below form) ── */
+  .btn-generate-main {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 24px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--blue-brand) 0%, var(--blue-light) 100%);
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px 28px rgba(26,79,160,0.35), 0 2px 8px rgba(26,79,160,0.2);
+    transition: var(--transition);
+    margin-bottom: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-generate-main::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .btn-generate-main:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 36px rgba(26,79,160,0.45), 0 4px 12px rgba(26,79,160,0.25);
+  }
+  .btn-generate-main:active { transform: translateY(0); }
+  .btn-generate-icon {
+    display: flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(255,255,255,0.18);
+    flex-shrink: 0;
+    color: var(--white);
+  }
+  .btn-generate-text {
+    flex: 1; text-align: left;
+  }
+  .btn-generate-text strong {
+    display: block;
+    font-family: 'Syne', sans-serif;
+    font-size: 17px; font-weight: 700;
+    color: var(--white);
+    line-height: 1.2;
+  }
+  .btn-generate-text small {
+    display: block;
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 400;
+    margin-top: 2px;
+  }
+  .btn-generate-arrow {
+    font-size: 22px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 300;
+    flex-shrink: 0;
+    transition: var(--transition);
+  }
+  .btn-generate-main:hover .btn-generate-arrow { color: var(--white); transform: translateX(4px); }
+
+  /* ── BUAT SCRIPT DOMINANT BUTTON ── */
+  .buat-script-wrapper {
+    position: relative;
+    margin-bottom: 2px;
+  }
+  .buat-script-glow {
+    position: absolute;
+    inset: -3px;
+    border-radius: calc(var(--radius-md) + 3px);
+    background: linear-gradient(135deg, #D4A843, #F5CE6A, #D4A843, #F5CE6A);
+    background-size: 300% 300%;
+    animation: glowRotate 3s linear infinite;
+    filter: blur(8px);
+    opacity: 0.7;
+    z-index: 0;
+  }
+  @keyframes glowRotate {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .btn-buat-script {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 22px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, #1a1000 0%, #2a1f00 40%, #1a1000 100%);
+    border: 1.5px solid rgba(212,168,67,0.6);
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(212,168,67,0.35), 0 2px 8px rgba(0,0,0,0.4);
+    transition: all 0.28s cubic-bezier(.4,0,.2,1);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+  .btn-buat-script::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(212,168,67,0.12) 50%, transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.7s ease;
+  }
+  .btn-buat-script::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(245,206,106,0.8), transparent);
+  }
+  .btn-buat-script:hover::before { transform: translateX(100%); }
+  .btn-buat-script:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 48px rgba(212,168,67,0.5), 0 4px 16px rgba(0,0,0,0.4);
+    border-color: rgba(245,206,106,0.9);
+  }
+  .btn-buat-script:active { transform: translateY(0); }
+  .buat-script-left {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .buat-script-icon {
+    display: flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px; border-radius: 13px;
+    background: linear-gradient(135deg, rgba(212,168,67,0.2), rgba(245,206,106,0.1));
+    border: 1px solid rgba(212,168,67,0.3);
+    flex-shrink: 0;
+    color: var(--gold-light);
+  }
+  .buat-script-text {
+    text-align: left;
+  }
+  .buat-script-text strong {
+    display: block;
+    font-family: 'Syne', sans-serif;
+    font-size: 19px; font-weight: 800;
+    background: linear-gradient(90deg, var(--gold-light), #fff8dc, var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .buat-script-text small {
+    display: block;
+    font-size: 12px;
+    color: rgba(212,168,67,0.7);
+    font-weight: 500;
+    margin-top: 3px;
+  }
+  .buat-script-arrow {
+    display: flex; align-items: center; justify-content: center;
+    width: 42px; height: 42px; border-radius: 11px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--blue-deep);
+    flex-shrink: 0;
+    transition: var(--transition);
+    box-shadow: 0 4px 12px rgba(212,168,67,0.4);
+  }
+  .btn-buat-script:hover .buat-script-arrow { transform: translateX(3px); box-shadow: 0 6px 20px rgba(212,168,67,0.6); }
+
+
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 10px; }
@@ -388,7 +550,7 @@
     <div class="header-dots"><span></span><span></span><span></span></div>
     <div class="header-badge"><span>✦</span> SCRIPT VIRAL CONTENT BUILDER</div>
     <h1 class="header-title"><em>Skripin</em></h1>
-    <p class="header-tagline">Buat script konten, ads, dan campaign itungan menit beres.</p>
+    <p class="header-tagline">Buat prompt script konten, ads, dan campaign dalam itungan menit beres.</p>
   </div>
 </header>
 
@@ -770,6 +932,18 @@
       </div>
     </div>
 
+    <!-- GENERATE BUTTON -->
+    <button class="btn btn-generate-main" onclick="generatePrompt()">
+      <span class="btn-generate-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </span>
+      <span class="btn-generate-text">
+        <strong>Generate Prompt</strong>
+        <small>Buat prompt AI profesional dari input kamu</small>
+      </span>
+      <span class="btn-generate-arrow">→</span>
+    </button>
+
   </div><!-- /form-panel -->
 
   <!-- ══ RESULT PANEL ══ -->
@@ -790,24 +964,33 @@
           </div>
         </div>
         <div class="result-actions">
-          <button class="btn btn-primary" onclick="generatePrompt()">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            Generate Prompt
-          </button>
+          <!-- BUAT SCRIPT — dominant CTA -->
+          <div class="buat-script-wrapper">
+            <div class="buat-script-glow"></div>
+            <button class="btn-buat-script" onclick="openChatGPT()" id="btn_chatgpt">
+              <span class="buat-script-left">
+                <span class="buat-script-icon">
+                  <svg width="28" height="28" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M37.532 16.87a9.963 9.963 0 00-.856-8.184 10.078 10.078 0 00-10.855-4.835 9.965 9.965 0 00-7.505-3.337 10.078 10.078 0 00-9.612 6.977 9.967 9.967 0 00-6.664 4.834 10.08 10.08 0 001.24 11.817 9.965 9.965 0 00.856 8.185 10.079 10.079 0 0010.855 4.835 9.965 9.965 0 007.504 3.336 10.079 10.079 0 009.617-6.981 9.967 9.967 0 006.663-4.834 10.079 10.079 0 00-1.243-11.813zM22.498 37.886a7.474 7.474 0 01-4.799-1.735c.061-.033.168-.091.237-.134l7.964-4.6a1.294 1.294 0 00.655-1.134V19.054l3.366 1.944a.12.12 0 01.066.092v9.299a7.505 7.505 0 01-7.49 7.496zM6.392 31.006a7.471 7.471 0 01-.894-5.023c.06.036.162.099.237.141l7.964 4.6a1.297 1.297 0 001.308 0l9.724-5.614v3.888a.12.12 0 01-.048.103l-8.051 4.649a7.504 7.504 0 01-10.24-2.744zM4.297 13.62A7.469 7.469 0 018.2 10.333c0 .068-.004.19-.004.274v9.201a1.294 1.294 0 00.654 1.132l9.723 5.614-3.366 1.944a.12.12 0 01-.114.012L7.044 23.86a7.504 7.504 0 01-2.747-10.24zm27.658 6.437l-9.724-5.615 3.367-1.943a.121.121 0 01.114-.012l8.048 4.648a7.498 7.498 0 01-1.158 13.528v-9.476a1.293 1.293 0 00-.647-1.13zm3.35-5.043c-.059-.037-.162-.099-.236-.141l-7.965-4.6a1.298 1.298 0 00-1.308 0l-9.723 5.614v-3.888a.12.12 0 01.048-.103l8.05-4.645a7.497 7.497 0 0111.135 7.763zm-21.063 6.929l-3.367-1.944a.12.12 0 01-.065-.092v-9.299a7.497 7.497 0 0112.293-5.756 6.94 6.94 0 00-.236.134l-7.965 4.6a1.294 1.294 0 00-.654 1.132l-.006 11.225zm1.829-3.943l4.33-2.501 4.332 2.497v4.998l-4.331 2.5-4.331-2.5V18z" fill="currentColor"/></svg>
+                </span>
+                <span class="buat-script-text">
+                  <strong>Generate Script ✦</strong>
+                </span>
+              </span>
+              <span class="buat-script-arrow">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </span>
+            </button>
+          </div>
           <div class="btn-row">
             <button class="btn btn-gold" onclick="copyResult()" id="btn_copy">
               <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
               Copy Result
             </button>
-            <button class="btn btn-ghost" onclick="openChatGPT()" id="btn_chatgpt">
-              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
-              Generate Script
+            <button class="btn btn-ghost" onclick="resetForm()">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9M3 3v9h9"/></svg>
+              Reset Form
             </button>
           </div>
-          <button class="btn btn-ghost" onclick="resetForm()">
-            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9M3 3v9h9"/></svg>
-            Reset Semua
-          </button>
         </div>
       </div>
     </div>
@@ -816,7 +999,7 @@
 </div><!-- /app-layout -->
 
 <footer>
-  <p>Made with ❤ by <strong>Ihsan Saifullah</strong> · AI Script Generator · Semua proses lokal, no backend.</p>
+  <p>Made with ❤ by <strong>Skiripini</strong> · AI Script Generator · Semua proses lokal, no backend.</p>
 </footer>
 
 <div class="toast" id="toast">
