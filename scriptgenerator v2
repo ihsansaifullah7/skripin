@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skripin — Script Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue-deep: #0A1628;
+    --blue-mid: #0E2A52;
+    --blue-brand: #1A4FA0;
+    --blue-light: #2E73D4;
+    --blue-glow: #4A90E2;
+    --gold: #D4A843;
+    --gold-light: #F5CE6A;
+    --gold-pale: #FFF8E7;
+    --white: #FFFFFF;
+    --gray-100: #F4F6FA;
+    --gray-200: #E8ECF4;
+    --gray-300: #C8D0E0;
+    --gray-500: #7A88A8;
+    --gray-700: #3D4A62;
+    --success: #27AE60;
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+    --shadow-card: 0 4px 24px rgba(10,22,40,0.10), 0 1px 4px rgba(10,22,40,0.07);
+    --shadow-glow: 0 0 0 3px rgba(74,144,226,0.18);
+    --transition: all 0.22s cubic-bezier(.4,0,.2,1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--gray-100);
+    color: var(--blue-deep);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue-mid) 60%, #132040 100%);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(74,144,226,0.13) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 80% at 10% 80%, rgba(212,168,67,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 48px 32px 44px;
+    position: relative;
+    z-index: 1;
+  }
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(212,168,67,0.15);
+    border: 1px solid rgba(212,168,67,0.35);
+    border-radius: 100px;
+    padding: 5px 14px 5px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gold-light);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .header-badge span { font-size: 14px; }
+  .header-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(38px, 6vw, 64px);
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+  }
+  .header-title em {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--gold-light), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header-tagline {
+    font-size: 17px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 400;
+    max-width: 520px;
+  }
+  .header-dots {
+    position: absolute;
+    right: 32px; top: 32px;
+    display: flex; gap: 8px;
+  }
+  .header-dots span {
+    display: block; width: 10px; height: 10px; border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+  }
+  .header-dots span:first-child { background: rgba(212,168,67,0.5); }
+
+  /* ── LAYOUT ── */
+  .app-layout {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 28px;
+    align-items: start;
+  }
+  @media (max-width: 960px) {
+    .app-layout { grid-template-columns: 1fr; }
+  }
+
+  /* ── FORM PANEL ── */
+  .form-panel {}
+  .form-section {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 28px 28px 24px;
+    margin-bottom: 20px;
+    border: 1px solid var(--gray-200);
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+    padding-bottom: 16px;
+    border-bottom: 1.5px solid var(--gray-200);
+  }
+  .section-num {
+    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--blue-brand), var(--blue-light));
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 700;
+    color: var(--blue-deep);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .section-title small {
+    display: block;
+    font-size: 11px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    color: var(--gray-500);
+    text-transform: none;
+    letter-spacing: 0;
+    margin-top: 1px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+  }
+  .form-grid.cols-1 { grid-template-columns: 1fr; }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .field.full { grid-column: 1 / -1; }
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-700);
+    letter-spacing: 0.01em;
+  }
+
+  select, input[type="text"], input[type="number"], textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    background: var(--gray-100);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--blue-deep);
+    transition: var(--transition);
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237A88A8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+  textarea { resize: vertical; min-height: 90px; }
+  select:focus, input:focus, textarea:focus {
+    border-color: var(--blue-glow);
+    background: var(--white);
+    box-shadow: var(--shadow-glow);
+  }
+  select:hover, input:hover, textarea:hover { border-color: var(--gray-300); }
+
+  .manual-input {
+    margin-top: 8px;
+    display: none;
+  }
+  .manual-input.visible { display: block; }
+  .manual-input input {
+    border-style: dashed;
+    border-color: var(--gold);
+    background: var(--gold-pale);
+    font-size: 13px;
+  }
+  .manual-input input::placeholder { color: var(--gold); opacity: 0.7; }
+  .manual-label {
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 5px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── RESULT PANEL ── */
+  .result-panel {
+    position: sticky;
+    top: 24px;
+  }
+  @media (max-width: 960px) {
+    .result-panel { position: static; }
+  }
+  .result-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+  }
+  .result-header {
+    background: linear-gradient(135deg, var(--blue-deep), var(--blue-mid));
+    padding: 20px 24px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .result-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: rgba(212,168,67,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .result-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 700;
+    color: var(--white);
+  }
+  .result-subtitle { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 1px; }
+
+  .result-body { padding: 20px 24px; }
+  .result-output {
+    background: var(--gray-100);
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--gray-700);
+    min-height: 200px;
+    max-height: 520px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: 'DM Sans', sans-serif;
+    transition: var(--transition);
+    scrollbar-width: thin;
+    scrollbar-color: var(--gray-300) transparent;
+  }
+  .result-output.has-content {
+    background: #F0F6FF;
+    border-color: rgba(74,144,226,0.3);
+    color: var(--blue-deep);
+  }
+  .result-placeholder {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 10px; height: 180px; color: var(--gray-300); text-align: center;
+  }
+  .result-placeholder span { font-size: 32px; }
+  .result-placeholder p { font-size: 13px; }
+
+  .result-actions {
+    display: flex; flex-direction: column; gap: 10px;
+    margin-top: 16px;
+  }
+  .btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 20px;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; border: none;
+    transition: var(--transition);
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--blue-brand), var(--blue-light));
+    color: var(--white);
+    box-shadow: 0 4px 16px rgba(26,79,160,0.3);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(26,79,160,0.4); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--blue-deep);
+    box-shadow: 0 4px 16px rgba(212,168,67,0.3);
+  }
+  .btn-gold:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(212,168,67,0.4); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--gray-500);
+    border: 1.5px solid var(--gray-200);
+  }
+  .btn-ghost:hover { background: var(--gray-100); color: var(--blue-deep); border-color: var(--gray-300); }
+  .btn-row { display: flex; gap: 10px; }
+  .btn-row .btn { flex: 1; }
+
+  /* toast */
+  .toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--blue-deep); color: var(--white);
+    padding: 12px 22px; border-radius: 100px;
+    font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 8px 32px rgba(10,22,40,0.25);
+    opacity: 0; pointer-events: none;
+    transition: all 0.3s cubic-bezier(.4,0,.2,1);
+    z-index: 9999;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast-icon { font-size: 16px; }
+
+  /* validation */
+  .field-error { border-color: #E74C3C !important; background: #FFF5F5 !important; }
+  .error-msg { font-size: 11px; color: #E74C3C; font-weight: 500; margin-top: 3px; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--gray-500);
+    font-size: 13px;
+    border-top: 1px solid var(--gray-200);
+    background: var(--white);
+  }
+  footer strong { color: var(--blue-brand); }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-dots"><span></span><span></span><span></span></div>
+    <div class="header-badge"><span>✦</span> AI PROMPT BUILDER</div>
+    <h1 class="header-title"><em>Skripin</em></h1>
+    <p class="header-tagline">Buat prompt script konten, ads, dan campaign 2 menit beres.</p>
+  </div>
+</header>
+
+<div class="app-layout">
+
+  <!-- ══ FORM PANEL ══ -->
+  <div class="form-panel">
+
+    <!-- KATEGORI 1 -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div class="section-title">Konteks & Platform<small>Platform, tujuan, dan persona konten kamu</small></div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="tujuan">Tujuan Utama</label>
+          <select id="tujuan" onchange="toggleManual(this,'tujuan_manual')">
+            <option value="">— Pilih Tujuan —</option>
+            <option>Awareness</option>
+            <option>Edukasi (Berikan Value/Informasi)</option>
+            <option>Engagement (Like/Komen/Share)</option>
+            <option>Lead Gen (Mengumpulkan Kontak/Email/WA)</option>
+            <option>Retargeting (Mengingatkan Lagi)</option>
+            <option>Trust Building (Bangun Kepercayaan)</option>
+            <option>Brand Recall</option>
+            <option>App Install (Download Sekarang)</option>
+            <option>Sales/Closing (Langsung Jual)</option>
+            <option value="lainnya">Lainnya (Isi Manual)</option>
+          </select>
+          <div class="manual-input" id="tujuan_manual">
+            <div class="manual-label">✏ Isi Tujuan Manual:</div>
+            <input type="text" id="tujuan_manual_val" placeholder="Tulis tujuan kamu...">
+          </div>
+        </div>
+        <div class="field">
+          <label for="platform">Platform Target</label>
+          <select id="platform" onchange="toggleManual(this,'platform_manual')">
+            <option value="">— Pilih Platform —</option>
+            <option>TikTok/Reels</option>
+            <option>YouTube</option>
+            <option>LinkedIn</option>
+            <option>Single Feed</option>
+            <option>Facebook</option>
+            <option>Pinterest</option>
+            <option>Landing Page</option>
+            <option>Twitter/X</option>
+            <option>Threads</option>
+            <option value="lainnya">Lainnya (Isi Manual)</option>
+          </select>
+          <div class="manual-input" id="platform_manual">
+            <div class="manual-label">✏ Isi Platform Manual:</div>
+            <input type="text" id="platform_manual_val" placeholder="Tulis platform kamu...">
+          </div>
+        </div>
+        <div class="field full">
+          <label for="avatar">Avatar / Persona</label>
+          <select id="avatar" onchange="toggleManual(this,'avatar_manual')">
+            <option value="">— Pilih Persona —</option>
+            <option>The Founder/Owner (Visioner/Jujur)</option>
+            <option>UGC Creator (Sok Akrab)</option>
+            <option>Expert/Mentor (Berwibawa)</option>
+            <option>Customer Testimonial (Bukti Sosial)</option>
+            <option>Voice Offer/Faceless</option>
+            <option>Motion Graphic/Animation</option>
+            <option>Case Study Presenter (Analisis)</option>
+            <option value="lainnya">Lainnya (Isi Manual)</option>
+          </select>
+          <div class="manual-input" id="avatar_manual">
+            <div class="manual-label">✏ Isi Persona Manual:</div>
+            <input type="text" id="avatar_manual_val" placeholder="Tulis persona kamu...">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KATEGORI 2 -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div class="section-title">Spesifikasi Konten<small>Jenis, format, dan gaya visual konten</small></div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="jenis_konten">Jenis Konten</label>
+          <select id="jenis_konten" onchange="toggleManual(this,'jenis_konten_manual')">
+            <option value="">— Pilih Jenis —</option>
+            <option>Konten Ads</option>
+            <option>Affiliate Review</option>
+            <option>Organik Harian</option>
+            <option>Hard Selling</option>
+            <option>Soft Selling</option>
+            <option>Trend</option>
+            <option>Behind The Scenes</option>
+            <option>Case Study</option>
+            <option>Product Launch/Teaser</option>
+            <option>Live Event Promo</option>
+            <option value="lainnya">Lainnya (Isi Manual)</option>
+          </select>
+          <div class="manual-input" id="jenis_konten_manual">
+            <div class="manual-label">✏ Isi Jenis Manual:</div>
+            <input type="text" id="jenis_konten_manual_val" placeholder="Tulis jenis konten...">
+          </div>
+        </div>
+        <div class="field">
+          <label for="format_durasi">Format & Durasi</label>
+          <select id="format_durasi">
+            <option value="">— Pilih Format —</option>
+            <option>Video 15–30 detik</option>
+            <option>Video 30–60 detik</option>
+            <option>Carousel 3–10 Slide</option>
+            <option>Single Image</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label for="gaya_visual">Gaya Visual / Shooting</label>
+          <select id="gaya_visual" onchange="toggleManual(this,'gaya_visual_manual')">
+            <option value="">— Pilih Gaya Visual —</option>
+            <option>Talking Head</option>
+            <option>Greenscreen</option>
+            <option>POV (Tangan Memegang Produk)</option>
+            <option>Lifestyle/Day in Life</option>
+            <option>Cinematic</option>
+            <option>Aesthetic</option>
+            <option>ASMR</option>
+            <option>Split Screen (Before/After)</option>
+            <option>Animation 2D/3D</option>
+            <option>Stop Motion (Frame by Frame)</option>
+            <option value="lainnya">Lainnya (Isi Manual)</option>
+          </select>
+          <div class="manual-input" id="gaya_visual_manual">
+            <div class="manual-label">✏ Isi Gaya Visual Manual:</div>
+            <input type="text" id="gaya_visual_manual_val" placeholder="Tulis gaya visual kamu...">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KATEGORI 3 -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title">Strategi Copywriting<small>Framework copy dan hook strategy</small></div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="framework">Framework Copy</label>
+          <select id="framework" onchange="toggleManual(this,'framework_manual')">
+            <option value="">— Pilih Framework —</option>
+            <option>AIDCA</option>
+            <option>PAS (Problem, Agitation, Solution)</option>
+            <option>4P (Promise, Picture, Proof, Push)</option>
+            <option>SLAP (Stop, Look, Act, Purchase)</option>
+            <option>ABT (And, But, Therefore)</option>
+            <option>HSO (Hook, Story, Offer)</option>
+            <option>3P (Problem, Promise, Proof)</option>
+            <option>3U (Useful, Urgent, Unique)</option>
+            <option>The 3 Reason Why</option>
+            <option>Feature, Solution, Benefit</option>
+            <option>Stop, Frame, Listen</option>
+            <option value="lainnya">Lainnya (Isi Sendiri)</option>
+          </select>
+          <div class="manual-input" id="framework_manual">
+            <div class="manual-label">✏ Isi Framework Manual:</div>
+            <input type="text" id="framework_manual_val" placeholder="Tulis framework kamu...">
+          </div>
+        </div>
+        <div class="field">
+          <label for="hook">Hook Strategy</label>
+          <select id="hook">
+            <option value="">— Pilih Hook —</option>
+            <option>Specific Number (3 Alasan...)</option>
+            <option>Statistic/Data (Fakta Mengejutkan)</option>
+            <option>Question Based (Pertanyaan Memancing)</option>
+            <option>Story Hook</option>
+            <option>Pattern Interrupt (Gerakan/Suara Aneh)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- KATEGORI 4 -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <div class="section-title">Target Audience<small>Level awareness, target market, dan psikografis</small></div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="awareness">Level Awareness</label>
+          <select id="awareness">
+            <option value="">— Pilih Level —</option>
+            <option>Unaware (Belum Tau Masalah)</option>
+            <option>Problem Aware (Cari Solusi)</option>
+            <option>Solution Aware (Membandingkan Produk)</option>
+            <option>Most Aware (Siap Beli, Butuh Dorongan)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="target_market">Target Market</label>
+          <select id="target_market" onchange="toggleManual(this,'target_market_manual')">
+            <option value="">— Pilih Target —</option>
+            <option>Business Owner (UMKM/Brand Owner)</option>
+            <option>Sales Team/Sales Leader</option>
+            <option>Franchise Owner</option>
+            <option>Seller Marketplace</option>
+            <option>Reseller/Dropshipper</option>
+            <option>Content Creator/Affiliate</option>
+            <option>Coach/Mentor/Trainer</option>
+            <option>Edukator</option>
+            <option>HR/People Ops</option>
+            <option>Finance/Admin</option>
+            <option>Mahasiswa</option>
+            <option>Fresh Graduate</option>
+            <option>Umum</option>
+            <option value="lainnya">Lainnya (Isi Manual)</option>
+          </select>
+          <div class="manual-input" id="target_market_manual">
+            <div class="manual-label">✏ Isi Target Manual:</div>
+            <input type="text" id="target_market_manual_val" placeholder="Tulis target market...">
+          </div>
+        </div>
+        <div class="field full">
+          <label for="psycho">Psychographics</label>
+          <select id="psycho" onchange="toggleManual(this,'psycho_manual')">
+            <option value="">— Pilih Psikografis —</option>
+            <option>Status Seeker (Ingin Terlihat Kaya/Pinter)</option>
+            <option>Skeptic (Butuh Fakta/Logis)</option>
+            <option>Pain-Averse (Takut Rugi/Salah Pilih)</option>
+            <option>Impulse Buyer (FOMO)</option>
+            <option>Value Seeker (Cari yang Paling Murah/Hemat)</option>
+            <option>Family Oriented (Fokus Keluarga/Anak)</option>
+            <option>Luxury/High-End (Eksklusif, Mahal)</option>
+            <option value="lainnya">Lainnya (Isi Manual)</option>
+          </select>
+          <div class="manual-input" id="psycho_manual">
+            <div class="manual-label">✏ Isi Psikografis Manual:</div>
+            <input type="text" id="psycho_manual_val" placeholder="Tulis psikografis kamu...">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KATEGORI 5 -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <div class="section-title">Detail Produk<small>Info produk, masalah, solusi, dan value proposition</small></div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="compliance">Compliance / Niche</label>
+          <select id="compliance" onchange="toggleManual(this,'compliance_manual')">
+            <option value="">— Pilih Niche —</option>
+            <option>General (Aman Bebas)</option>
+            <option>Beauty/Skincare</option>
+            <option>Food & Beverage</option>
+            <option>Financial/Investment</option>
+            <option value="lainnya">Lainnya (Isi Manual)</option>
+          </select>
+          <div class="manual-input" id="compliance_manual">
+            <div class="manual-label">✏ Isi Niche Manual:</div>
+            <input type="text" id="compliance_manual_val" placeholder="Tulis niche kamu...">
+          </div>
+        </div>
+        <div class="field">
+          <label for="nama_produk">Nama Produk</label>
+          <input type="text" id="nama_produk" placeholder="Contoh: Akademi Digital Pro">
+        </div>
+        <div class="field full">
+          <label for="jenis_produk">Jenis Produk</label>
+          <select id="jenis_produk" onchange="toggleManual(this,'jenis_produk_manual')">
+            <option value="">— Pilih Jenis Produk —</option>
+            <optgroup label="Digital">
+              <option>Digital (Ebook)</option>
+              <option>Digital (Template)</option>
+              <option>Digital (Toolkit)</option>
+              <option>Digital (Resource Pack)</option>
+              <option>Digital (Membership/Komunitas)</option>
+            </optgroup>
+            <optgroup label="Jasa">
+              <option>Jasa (Agency/Freelance)</option>
+              <option>Jasa (Konsultasi 1on1)</option>
+              <option>Jasa (Audit/Review)</option>
+            </optgroup>
+            <optgroup label="Fisik">
+              <option>Fisik (Skincare/Fashion)</option>
+              <option>Fisik (Food & Beverage)</option>
+              <option>Fisik (Kesehatan/Wellness)</option>
+              <option>Fisik (Home & Living)</option>
+              <option>Fisik (Gadget/Aksesoris)</option>
+            </optgroup>
+            <optgroup label="SaaS & App">
+              <option>SaaS</option>
+              <option>App/Mobile</option>
+              <option>Plugin/Add On</option>
+            </optgroup>
+            <optgroup label="Edukasi">
+              <option>Kursus/Coaching</option>
+              <option>Bootcamp/Program Intensif</option>
+              <option>Workshop</option>
+              <option>Event/Webinar</option>
+              <option>Event Offline</option>
+            </optgroup>
+            <optgroup label="Lainnya">
+              <option>Fundraising/Donasi</option>
+              <option value="lainnya">Lainnya (Isi Manual)</option>
+            </optgroup>
+          </select>
+          <div class="manual-input" id="jenis_produk_manual">
+            <div class="manual-label">✏ Isi Jenis Produk Manual:</div>
+            <input type="text" id="jenis_produk_manual_val" placeholder="Tulis jenis produk kamu...">
+          </div>
+        </div>
+        <div class="field full">
+          <label for="masalah">Masalah Utama Target Market</label>
+          <textarea id="masalah" placeholder="Contoh: Target market kesulitan mendapatkan klien premium karena tidak tahu cara positioning yang tepat..."></textarea>
+        </div>
+        <div class="field full">
+          <label for="solusi">Solusi Utama untuk Target Market</label>
+          <textarea id="solusi" placeholder="Contoh: Memberikan sistem step-by-step untuk membangun personal brand dan menarik klien premium dalam 30 hari..."></textarea>
+        </div>
+        <div class="field full">
+          <label for="uvp">Unique Value Produk Kamu</label>
+          <textarea id="uvp" placeholder="Contoh: Satu-satunya program yang memberikan live feedback 1-on-1 + template siap pakai + komunitas eksklusif..."></textarea>
+        </div>
+        <div class="field">
+          <label for="tone">Gaya Bahasa / Tone</label>
+          <select id="tone" onchange="toggleManual(this,'tone_manual')">
+            <option value="">— Pilih Tone —</option>
+            <option>Santai (Sok Kenal)</option>
+            <option>Edukatif & Profesional</option>
+            <option>Urgent & Direct</option>
+            <option>Gen Z/Jaksel (Gaul)</option>
+            <option>Witty & Humorous (Lucu)</option>
+            <option>Empathetic (Empati)</option>
+            <option>Minimalist (Singkat Padat)</option>
+            <option value="lainnya">Lainnya (Isi Manual)</option>
+          </select>
+          <div class="manual-input" id="tone_manual">
+            <div class="manual-label">✏ Isi Tone Manual:</div>
+            <input type="text" id="tone_manual_val" placeholder="Tulis gaya bahasa kamu...">
+          </div>
+        </div>
+        <div class="field">
+          <label for="cta">Call to Action / CTA</label>
+          <select id="cta" onchange="toggleManual(this,'cta_manual')">
+            <option value="">— Pilih CTA —</option>
+            <option>Klik Link di BIO</option>
+            <option>DM/Chat Sekarang</option>
+            <option>Comment "INFO"</option>
+            <option>Follow & Save</option>
+            <option>Beli Sekarang</option>
+            <option>Daftar Sekarang</option>
+            <option>Swipe Up (Story)</option>
+            <option>Start Free Trial</option>
+            <option>Download Aset/Ebook</option>
+            <option value="lainnya">Lainnya (Isi Manual)</option>
+          </select>
+          <div class="manual-input" id="cta_manual">
+            <div class="manual-label">✏ Isi CTA Manual:</div>
+            <input type="text" id="cta_manual_val" placeholder="Tulis CTA kamu...">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KATEGORI 6 -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-num">6</div>
+        <div class="section-title">Quantity Options<small>Jumlah variasi script yang ingin dihasilkan</small></div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="jumlah_variasi">Jumlah Variasi Script</label>
+          <input type="number" id="jumlah_variasi" min="1" max="10" value="3" placeholder="Contoh: 3">
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /form-panel -->
+
+  <!-- ══ RESULT PANEL ══ -->
+  <div class="result-panel">
+    <div class="result-card">
+      <div class="result-header">
+        <div class="result-icon">✦</div>
+        <div>
+          <div class="result-title">Visual Result Prompt</div>
+          <div class="result-subtitle">Prompt AI profesional siap kirim</div>
+        </div>
+      </div>
+      <div class="result-body">
+        <div class="result-output" id="result_output">
+          <div class="result-placeholder">
+            <span>🪄</span>
+            <p>Isi form lalu klik <strong>Generate Prompt</strong></p>
+          </div>
+        </div>
+        <div class="result-actions">
+          <button class="btn btn-primary" onclick="generatePrompt()">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Generate Prompt
+          </button>
+          <div class="btn-row">
+            <button class="btn btn-gold" onclick="copyResult()" id="btn_copy">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy Result
+            </button>
+            <button class="btn btn-ghost" onclick="openChatGPT()" id="btn_chatgpt">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+              ChatGPT
+            </button>
+          </div>
+          <button class="btn btn-ghost" onclick="resetForm()">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9M3 3v9h9"/></svg>
+            Reset Semua
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /app-layout -->
+
+<footer>
+  <p>Made with ❤ by <strong>Skripin</strong> · AI Script Generator · Semua proses lokal, no backend.</p>
+</footer>
+
+<div class="toast" id="toast">
+  <span class="toast-icon">✓</span>
+  <span id="toast_msg">Berhasil dicopy!</span>
+</div>
+
+<script>
+  let generatedPrompt = '';
+
+  function toggleManual(sel, manualId) {
+    const div = document.getElementById(manualId);
+    if (sel.value === 'lainnya') {
+      div.classList.add('visible');
+    } else {
+      div.classList.remove('visible');
+    }
+  }
+
+  function getVal(selId, manualValId) {
+    const sel = document.getElementById(selId);
+    if (!sel) return '';
+    if (sel.value === 'lainnya') {
+      const inp = document.getElementById(manualValId);
+      return inp ? inp.value.trim() : '';
+    }
+    return sel.value;
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toast_msg').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  function resetForm() {
+    const selects = document.querySelectorAll('select');
+    selects.forEach(s => s.value = '');
+    const inputs = document.querySelectorAll('input[type="text"], textarea');
+    inputs.forEach(i => i.value = '');
+    document.getElementById('jumlah_variasi').value = 3;
+    const manuals = document.querySelectorAll('.manual-input');
+    manuals.forEach(m => m.classList.remove('visible'));
+    const out = document.getElementById('result_output');
+    out.classList.remove('has-content');
+    out.innerHTML = `<div class="result-placeholder"><span>🪄</span><p>Isi form lalu klik <strong>Generate Prompt</strong></p></div>`;
+    generatedPrompt = '';
+    showToast('Form berhasil direset!');
+  }
+
+  function validateForm() {
+    const required = [
+      { id: 'tujuan', label: 'Tujuan Utama' },
+      { id: 'platform', label: 'Platform Target' },
+      { id: 'nama_produk', label: 'Nama Produk' },
+    ];
+    let valid = true;
+    required.forEach(r => {
+      const el = document.getElementById(r.id);
+      if (!el) return;
+      const val = el.tagName === 'SELECT' ? el.value : el.value.trim();
+      if (!val || val === '') {
+        el.classList.add('field-error');
+        valid = false;
+        el.addEventListener('change', () => el.classList.remove('field-error'), { once: true });
+        el.addEventListener('input', () => el.classList.remove('field-error'), { once: true });
+      }
+    });
+    return valid;
+  }
+
+  function generatePrompt() {
+    if (!validateForm()) {
+      showToast('⚠ Lengkapi field wajib terlebih dahulu!');
+      return;
+    }
+
+    const tujuan       = getVal('tujuan','tujuan_manual_val') || 'Awareness';
+    const platform     = getVal('platform','platform_manual_val') || 'TikTok/Reels';
+    const avatar       = getVal('avatar','avatar_manual_val') || 'UGC Creator';
+    const jenisKonten  = getVal('jenis_konten','jenis_konten_manual_val') || 'Konten Ads';
+    const format       = document.getElementById('format_durasi').value || 'Video 15–30 detik';
+    const gayaVisual   = getVal('gaya_visual','gaya_visual_manual_val') || 'Talking Head';
+    const framework    = getVal('framework','framework_manual_val') || 'AIDCA';
+    const hook         = document.getElementById('hook').value || 'Question Based';
+    const awareness    = document.getElementById('awareness').value || 'Problem Aware';
+    const targetMarket = getVal('target_market','target_market_manual_val') || 'Umum';
+    const psycho       = getVal('psycho','psycho_manual_val') || 'Pain-Averse';
+    const compliance   = getVal('compliance','compliance_manual_val') || 'General';
+    const namaProduk   = document.getElementById('nama_produk').value.trim() || '[Nama Produk]';
+    const jenisProduk  = getVal('jenis_produk','jenis_produk_manual_val') || 'Digital';
+    const masalah      = document.getElementById('masalah').value.trim() || '[Masalah target market belum diisi]';
+    const solusi       = document.getElementById('solusi').value.trim() || '[Solusi belum diisi]';
+    const uvp          = document.getElementById('uvp').value.trim() || '[Unique value belum diisi]';
+    const tone         = getVal('tone','tone_manual_val') || 'Santai (Sok Kenal)';
+    const cta          = getVal('cta','cta_manual_val') || 'DM/Chat Sekarang';
+    const jumlah       = parseInt(document.getElementById('jumlah_variasi').value) || 3;
+
+    const prompt = `# ROLE & AUTHORITY
+Kamu adalah seorang Expert Script Writer & Content Strategist berpengalaman 10+ tahun dalam membuat script konten digital yang viral, persuasif, dan menghasilkan konversi tinggi. Kamu memahami psikologi audiens, ilmu copywriting, dan dinamika platform digital secara mendalam.
+
+---
+
+# OBJECTIVE CLARITY
+Buatkan **${jumlah} variasi script** konten yang berbeda satu sama lain untuk platform **${platform}** dengan tujuan utama: **${tujuan}**.
+
+Setiap variasi harus memiliki pendekatan, sudut pandang, dan nuansa berbeda — namun tetap konsisten pada produk, tujuan, dan target audiens yang sama.
+
+---
+
+# CONTEXTUAL FRAMEWORK
+- **Platform Target:** ${platform}
+- **Tujuan Konten:** ${tujuan}
+- **Persona/Avatar:** ${avatar}
+- **Jenis Konten:** ${jenisKonten}
+- **Format & Durasi:** ${format}
+- **Gaya Visual/Shooting:** ${gayaVisual}
+- **Niche/Compliance:** ${compliance}
+
+---
+
+# CONTENT SPECS
+Script harus ditulis dengan mempertimbangkan:
+- Format ${format} — setiap kata, kalimat, dan transisi harus terasa natural di ${platform}
+- Gaya visual ${gayaVisual} — instruksikan juga visual cue/action bila relevan (contoh: [zoom in wajah], [tampilkan produk], [text overlay])
+- Persona ${avatar} — karakter pembicara harus konsisten dari awal hingga akhir script
+- Jumlah kata/slide menyesuaikan durasi format yang dipilih
+
+---
+
+# STRATEGY CORE
+Gunakan framework copywriting **${framework}** sebagai struktur utama script.
+
+Hook Strategy yang harus diterapkan: **${hook}**
+- Pastikan 3 detik pertama (untuk video) atau slide pertama (untuk carousel) langsung menarik perhatian menggunakan hook strategy di atas
+- Setiap variasi boleh menggunakan variasi hook yang berbeda selama masih dalam kategori "${hook}"
+
+---
+
+# AUDIENCE INTELLIGENCE
+- **Level Awareness Audiens:** ${awareness}
+  → Sesuaikan kedalaman edukasi, asumsi pengetahuan, dan urgensi pesan berdasarkan level ini
+- **Target Market:** ${targetMarket}
+- **Psychographics:** ${psycho}
+  → Gunakan trigger emosional, bahasa, dan framing yang sesuai dengan tipe psikografis ini
+
+---
+
+# PRODUCT MAPPING
+- **Nama Produk:** ${namaProduk}
+- **Jenis Produk:** ${jenisProduk}
+- **Masalah Utama Target Market:**
+  ${masalah}
+- **Solusi yang Ditawarkan:**
+  ${solusi}
+- **Unique Value Proposition (UVP):**
+  ${uvp}
+
+→ Pastikan masalah, solusi, dan UVP terjalin natural ke dalam narasi script — jangan terasa seperti listing fitur kaku.
+
+---
+
+# STYLE CONTROL
+- **Gaya Bahasa/Tone:** ${tone}
+  → Pertahankan tone ini konsisten dari hook hingga CTA di semua variasi
+- Gunakan bahasa yang terasa manusiawi, autentik, dan tidak kaku
+- Hindari kata-kata generik seperti "dapatkan sekarang" tanpa konteks
+- Sesuaikan diksi dengan ${targetMarket} yang dituju
+
+---
+
+# OUTPUT STRUCTURE
+Untuk setiap variasi script, gunakan struktur berikut:
+
+## VARIASI [N] — [Nama Angle/Pendekatan Variasi Ini]
+
+**🎬 HOOK (0–3 detik / Slide 1):**
+[Tulis hook pembuka yang menghentikan scroll]
+
+**📖 BODY (Inti Konten — mengikuti framework ${framework}):**
+[Tulis isi konten sesuai framework — bagi per bagian framework]
+
+**💡 PROOF/TRUST (jika relevan):**
+[Social proof, statistik, atau elemen kepercayaan]
+
+**🎯 CTA (Call to Action):**
+[Tulis CTA: ${cta} — buat terasa natural, bukan paksaan]
+
+**🎥 CATATAN VISUAL/PRODUCTION:**
+[Berikan 2–3 instruksi visual/action untuk kreator konten]
+
+---
+
+# VISUAL EXECUTION
+Sertakan di setiap variasi:
+- Deskripsi singkat **mood/feel visual** yang direkomendasikan
+- Rekomendasi **caption** (1–2 kalimat) untuk post di ${platform}
+- Saran **hashtag relevan** (5–8 hashtag) bila platform adalah ${platform}
+
+---
+
+> **PENTING:** Hasilkan tepat **${jumlah} variasi** yang benar-benar berbeda angle-nya. Jangan hanya mengubah kata-kata — ubah sudut pandang, pendekatan emosional, dan struktur narasi setiap variasi. Output dalam Bahasa Indonesia sesuai tone: **${tone}**.`;
+
+    generatedPrompt = prompt;
+    const out = document.getElementById('result_output');
+    out.textContent = prompt;
+    out.classList.add('has-content');
+    showToast('✦ Prompt berhasil digenerate!');
+    if (window.innerWidth <= 960) {
+      out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  function copyResult() {
+    if (!generatedPrompt) {
+      showToast('⚠ Generate prompt dulu ya!');
+      return;
+    }
+    navigator.clipboard.writeText(generatedPrompt).then(() => {
+      showToast('✓ Prompt berhasil dicopy!');
+    }).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = generatedPrompt;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('✓ Prompt berhasil dicopy!');
+    });
+  }
+
+  function openChatGPT() {
+    if (!generatedPrompt) {
+      showToast('⚠ Generate prompt dulu sebelum ke ChatGPT!');
+      return;
+    }
+    const encoded = encodeURIComponent(generatedPrompt);
+    const url = `https://chatgpt.com/?q=${encoded}`;
+    window.open(url, '_blank');
+    showToast('↗ Membuka ChatGPT...');
+  }
+</script>
+</body>
+</html>
